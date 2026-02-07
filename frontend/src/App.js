@@ -12,9 +12,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// Component imports
 import Navbar from './components/Navbar';
 import OceanWaves from './components/OceanWaves';
+import BackgroundBubbles from './components/BackgroundBubbles';
 
 // Page imports
 import Home from './pages/Home';
@@ -34,7 +34,8 @@ function App() {
         <AuthProvider apiUrl={API_URL}>
             <Router>
                 {/* Main app container */}
-                <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                    <BackgroundBubbles />
 
                     {/* Navigation bar - visible on all pages */}
                     <Navbar />

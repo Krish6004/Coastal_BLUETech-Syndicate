@@ -202,7 +202,7 @@ const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
 const styles = {
     page: {
         minHeight: '100vh',
-        background: '#f8fafc',
+        background: 'transparent',
         padding: '2rem 1rem',
     },
     container: {

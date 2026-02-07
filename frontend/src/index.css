@@ -1314,3 +1314,23 @@ table tbody tr:hover {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+/* ========== BUBBLE BACKGROUND ANIMATION ========== */
+@keyframes bubbleRise {
+    0% {
+        bottom: -100px;
+        transform: translateX(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: translateX(30px);
+    }
+
+    100% {
+        bottom: 110vh;
+        transform: translateX(-30px);
+        opacity: 0;
+    }
+}

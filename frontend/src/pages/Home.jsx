@@ -24,8 +24,8 @@ const Home = () => {
             {/* Hero Section */}
             <section style={styles.hero}>
                 <div style={styles.heroBg}>
-                    <div style={styles.circle1}></div>
-                    <div style={styles.circle2}></div>
+                    <div className="animate-float" style={{ ...styles.circle1, animationDelay: '0s' }}></div>
+                    <div className="animate-float" style={{ ...styles.circle2, animationDelay: '2s' }}></div>
                 </div>
 
                 {/* Local Ocean Waves for Hero */}
@@ -47,7 +47,7 @@ const Home = () => {
                         </p>
 
                         <div style={styles.ctaGroup}>
-                            <Link to="/upload" className="btn-primary" style={styles.mainBtn}>
+                            <Link to="/upload" className="btn-primary animate-glow" style={styles.mainBtn}>
                                 📸 Start Reporting
                             </Link>
                             <Link to="/map" style={styles.outlineBtn}>
@@ -60,11 +60,6 @@ const Home = () => {
                             <div style={styles.statItem}>
                                 <div style={styles.statVal}>{stats?.total || '0'}+</div>
                                 <div style={styles.statLabel}>Reports Logged</div>
-                            </div>
-                            <div style={styles.statDivider}></div>
-                            <div style={styles.statItem}>
-                                <div style={styles.statVal}>99.4%</div>
-                                <div style={styles.statLabel}>AI Accuracy</div>
                             </div>
                             <div style={styles.statDivider}></div>
                             <div style={styles.statItem}>
@@ -91,8 +86,16 @@ const Home = () => {
                             { icon: '📍', title: 'Locate', desc: 'Precision mapping via GPS metadata' },
                             { icon: '🚀', title: 'Action', desc: 'Forward data to local NGOs instantly' }
                         ].map((f, i) => (
-                            <div key={i} className="premium-card" style={styles.featureCard}>
-                                <div style={styles.featureIcon}>{f.icon}</div>
+                            <div
+                                key={i}
+                                className="premium-card hover-lift animate-slide-up"
+                                style={{
+                                    ...styles.featureCard,
+                                    animationDelay: `${i * 0.15}s`,
+                                    opacity: 0 // Start invisible for animation
+                                }}
+                            >
+                                <div style={styles.featureIcon} className="icon-bounce">{f.icon}</div>
                                 <h3 style={styles.featureTitle}>{f.title}</h3>
                                 <p style={styles.featureDesc}>{f.desc}</p>
                             </div>
@@ -145,7 +148,7 @@ const Home = () => {
 };
 
 const styles = {
-    page: { background: '#f8fafc' },
+    page: { background: 'transparent' },
     container: { maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', position: 'relative', zIndex: 1 },
 
     // Hero
@@ -164,7 +167,7 @@ const styles = {
     mainBtn: { padding: '1rem 2.5rem', fontSize: '1.1rem' },
     outlineBtn: { padding: '1rem 2.5rem', fontSize: '1.1rem', background: 'white', color: '#1e293b', border: '2px solid #e2e8f0', borderRadius: '0.75rem', textDecoration: 'none', fontWeight: 700, transition: 'all 0.3s ease' },
 
-    heroStats: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', padding: '2rem', borderRadius: '2rem', maxWidth: '800px', margin: '0 auto' },
+    heroStats: { display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '2rem', borderRadius: '2rem', maxWidth: '800px', margin: '0 auto' },
     statItem: { padding: '0 1rem' },
     statVal: { fontSize: '2rem', fontWeight: 800, color: '#0f172a' },
     statLabel: { fontSize: '0.85rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginTop: '0.25rem' },
@@ -182,7 +185,7 @@ const styles = {
     featureDesc: { color: '#64748b', lineHeight: 1.6 },
 
     // Impact
-    impact: { padding: '8rem 0', background: 'white' },
+    impact: { padding: '8rem 0', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)' },
     impactGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' },
     impactContent: { textAlign: 'left' },
     impactTitle: { fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem', color: '#0f172a' },
