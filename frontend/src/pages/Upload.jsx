@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { InfinityLoader } from '../components/ui/loader-13';
 
 const Upload = ({ apiUrl = 'http://localhost:8000' }) => {
     // State
@@ -102,6 +103,20 @@ const Upload = ({ apiUrl = 'http://localhost:8000' }) => {
         setError(null);
         setLocationSource(null);
     };
+
+    if (isUploading) {
+        return (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/95 backdrop-blur-md transition-all duration-300">
+                <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-300">
+                    <InfinityLoader className="text-blue-500" size={120} />
+                    <div className="text-center space-y-2">
+                        <h3 className="text-2xl font-bold text-slate-800">Analyzing Report</h3>
+                        <p className="text-slate-500 font-medium animate-pulse">Our AI is detecting pollution levels...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={styles.page}>

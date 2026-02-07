@@ -2,11 +2,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
+const getBadge = (points) => {
+    if (points >= 15) return { name: 'Gold Guardian', color: '#d97706', icon: '🥇' }; // Amber-600
+    if (points >= 10) return { name: 'Silver Guardian', color: '#64748b', icon: '🥈' }; // Slate-500
+    if (points >= 5) return { name: 'Bronze Guardian', color: '#b45309', icon: '🥉' }; // Amber-700
+    return { name: 'New Recruit', color: '#3b82f6', icon: '🌱' }; // Blue-500
+};
+
 const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
-    const { user, logout } = useAuth();
+    const { user, logout, refreshUser } = useAuth();
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('reports');
+
+    useEffect(() => {
+        if (refreshUser) refreshUser();
+    }, [refreshUser]);
 
     useEffect(() => {
         const fetchMyReports = async () => {
@@ -36,8 +47,16 @@ const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
                     <div style={styles.userInfo}>
                         <h1 style={styles.userName}>{user.full_name}</h1>
                         <p style={styles.userEmail}>{user.email}</p>
-                        <div style={styles.badge}>
-                            {user.role === 'admin' ? '🛡️ System Admin' : '🌊 Coastal Guardian'}
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <div style={styles.badge}>
+                                {user.role === 'admin' ? '🛡️ System Admin' : '🌊 Coastal Guardian'}
+                            </div>
+                            <div style={{ ...styles.badge, background: (getBadge(user.points || 0).color) + '15', color: getBadge(user.points || 0).color, border: `1px solid ${getBadge(user.points || 0).color}30` }}>
+                                {getBadge(user.points || 0).icon} {getBadge(user.points || 0).name}
+                            </div>
+                            <div style={{ ...styles.badge, background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0' }}>
+                                💎 {user.points || 0} Points
+                            </div>
                         </div>
                     </div>
                 </div>

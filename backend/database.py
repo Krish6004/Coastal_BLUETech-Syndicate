@@ -43,7 +43,8 @@ def init_database():
             phone TEXT,
             role TEXT DEFAULT 'user',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            points INTEGER DEFAULT 0
         )
     """)
     
@@ -84,6 +85,12 @@ def init_database():
         )
     """)
     
+    # Check if user points column exists
+    try:
+        cursor.execute("SELECT points FROM users LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE users ADD COLUMN points INTEGER DEFAULT 0")
+
     # Check if columns exist, add them if not (for migration)
     try:
         cursor.execute("SELECT user_id FROM reports LIMIT 1")
@@ -187,7 +194,7 @@ def get_user_by_email(email: str) -> Optional[Dict]:
     cursor = conn.cursor()
     
     cursor.execute("""
-        SELECT id, full_name, email, password_hash, phone, role, created_at, updated_at
+        SELECT id, full_name, email, password_hash, phone, role, points, created_at, updated_at
         FROM users WHERE email = ?
     """, (email,))
     
@@ -206,7 +213,7 @@ def get_user_by_id(user_id: int) -> Optional[Dict]:
     cursor = conn.cursor()
     
     cursor.execute("""
-        SELECT id, full_name, email, password_hash, phone, role, created_at, updated_at
+        SELECT id, full_name, email, password_hash, phone, role, points, created_at, updated_at
         FROM users WHERE id = ?
     """, (user_id,))
     
@@ -304,6 +311,11 @@ def insert_report(
     """, (image_path, latitude, longitude, pollution_type, confidence, description, user_id))
     
     report_id = cursor.lastrowid
+    
+    # Increment user points if authenticated
+    if user_id:
+        cursor.execute("UPDATE users SET points = points + 1 WHERE id = ?", (user_id,))
+        
     conn.commit()
     conn.close()
     

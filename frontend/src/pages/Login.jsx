@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { InfinityLoader } from '../components/ui/loader-13';
 
 const Login = ({ apiUrl }) => {
     const [email, setEmail] = useState('');
@@ -38,6 +39,17 @@ const Login = ({ apiUrl }) => {
             setIsLoading(false);
         }
     };
+
+    if (isLoading) {
+        return (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/95 backdrop-blur-md transition-all duration-300">
+                <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-300">
+                    <InfinityLoader className="text-blue-500" size={120} />
+                    <p className="text-xl font-semibold text-slate-700 animate-pulse">Signing in...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="login-container" style={styles.container}>

@@ -31,7 +31,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 function App() {
     return (
-        <AuthProvider>
+        <AuthProvider apiUrl={API_URL}>
             <Router>
                 {/* Main app container */}
                 <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>

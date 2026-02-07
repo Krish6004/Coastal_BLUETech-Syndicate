@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, apiUrl = 'http://localhost:8000' }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
@@ -23,7 +23,14 @@ export const AuthProvider = ({ children }) => {
                     } else {
                         // Set default axios header
                         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                        setUser(decoded);
+
+                        try {
+                            const response = await axios.get(`${apiUrl}/api/auth/me`);
+                            setUser(response.data);
+                        } catch (error) {
+                            console.error("Failed to fetch user profile", error);
+                            setUser(decoded);
+                        }
                     }
                 } catch (error) {
                     logout();
@@ -33,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         initAuth();
-    }, [token]);
+    }, [token, apiUrl]);
 
     const login = (newToken, userData) => {
         localStorage.setItem('token', newToken);
@@ -53,11 +60,22 @@ export const AuthProvider = ({ children }) => {
         delete axios.defaults.headers.common['Authorization'];
     };
 
+    const refreshUser = async () => {
+        if (!token) return;
+        try {
+            const response = await axios.get(`${apiUrl}/api/auth/me`);
+            setUser(response.data);
+        } catch (error) {
+            console.error("Failed to refresh user data", error);
+        }
+    };
+
     const value = {
         user,
         token,
         login,
         logout,
+        refreshUser,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'admin',
         loading
