@@ -158,6 +158,27 @@ async def upload_report(
         # Analyze image with AI model
         detection_result = analyze_image(file_path)
         
+        # If no waste detected, do NOT save to database
+        if detection_result["label"] == "no_waste":
+            # Optional: Delete the uploaded file since we're not saving the report
+            try:
+                os.remove(file_path)
+            except:
+                pass
+                
+            return {
+                "success": True,
+                "report_id": None,
+                "message": "No pollution detected!",
+                "report": {
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "description": description,
+                    **detection_result
+                },
+                "status": "clean"
+            }
+
         # Store in database
         # Convert path to URL-friendly format for frontend
         image_url = f"/static/uploads/{filename}"

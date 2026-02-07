@@ -9,6 +9,15 @@ const getBadge = (points) => {
     return { name: 'New Recruit', color: '#3b82f6', icon: '🌱' }; // Blue-500
 };
 
+const REWARDS = [
+    { id: 1, title: 'Digital Certificate', cost: 5, icon: '📜', color: '#3b82f6', desc: 'Official recognition of your contribution.' },
+    { id: 2, title: 'Metal Straw Set', cost: 15, icon: '🥤', color: '#d97706', desc: 'Say no to plastic straws forever.' },
+    { id: 3, title: 'Ocean Warrior T-Shirt', cost: 30, icon: '👕', color: '#0ea5e9', desc: 'Wear your commitment proudly.' },
+    { id: 4, title: '$10 Ocean Donation', cost: 50, icon: '🌊', color: '#10b981', desc: 'We donate to cleanup NGOs in your name.' },
+    { id: 5, title: 'Exclusive Hoodie', cost: 100, icon: '🧥', color: '#6366f1', desc: 'Premium sustainable cotton hoodie.' },
+    { id: 6, title: 'Solar Power Bank', cost: 200, icon: '☀️', color: '#eab308', desc: 'Charge your devices with clean energy.' },
+];
+
 const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
     const { user, logout, refreshUser } = useAuth();
     const [reports, setReports] = useState([]);
@@ -70,6 +79,12 @@ const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
                         My Reports ({reports.length})
                     </button>
                     <button
+                        style={{ ...styles.tab, ...(activeTab === 'redeem' ? styles.activeTab : {}) }}
+                        onClick={() => setActiveTab('redeem')}
+                    >
+                        🎁 Redeem Rewards
+                    </button>
+                    <button
                         style={{ ...styles.tab, ...(activeTab === 'settings' ? styles.activeTab : {}) }}
                         onClick={() => setActiveTab('settings')}
                     >
@@ -113,6 +128,52 @@ const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
                             </div>
                         )}
                     </div>
+                ) : activeTab === 'redeem' ? (
+                    <div style={styles.rewardsGrid}>
+                        {REWARDS.map(reward => {
+                            const progress = Math.min(100, ((user.points || 0) / reward.cost) * 100);
+                            const canRedeem = (user.points || 0) >= reward.cost;
+
+                            return (
+                                <div key={reward.id} className="premium-card" style={styles.rewardCard}>
+                                    <div style={{ ...styles.rewardHeader, background: `${reward.color}15` }}>
+                                        <div style={{ fontSize: '3rem' }}>{reward.icon}</div>
+                                        <div style={{ ...styles.rewardBadge, color: reward.color, borderColor: `${reward.color}40` }}>
+                                            {reward.cost} Points
+                                        </div>
+                                    </div>
+                                    <div style={styles.rewardBody}>
+                                        <h3 style={styles.rewardTitle}>{reward.title}</h3>
+                                        <p style={styles.rewardDesc}>{reward.desc}</p>
+
+                                        <div style={styles.progressContainer}>
+                                            <div style={styles.progressBar}>
+                                                <div style={{ ...styles.progressFill, width: `${progress}%`, background: reward.color }}></div>
+                                            </div>
+                                            <div style={styles.progressText}>
+                                                {canRedeem ? 'Goal Reached!' : `${reward.cost - (user.points || 0)} more points needed`}
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            className="btn-primary"
+                                            style={{
+                                                width: '100%',
+                                                marginTop: '1rem',
+                                                opacity: canRedeem ? 1 : 0.5,
+                                                cursor: canRedeem ? 'pointer' : 'not-allowed',
+                                                background: canRedeem ? '#0f172a' : '#cbd5e1'
+                                            }}
+                                            disabled={!canRedeem}
+                                            onClick={() => alert(`Redemption request for "${reward.title}" sent!`)}
+                                        >
+                                            {canRedeem ? '🎉 Redeem Now' : '🔒 Locked'}
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 ) : (
                     <div className="premium-card" style={styles.settingsCard}>
                         <h3>Profile Information</h3>
@@ -134,7 +195,7 @@ const Profile = ({ apiUrl = 'http://localhost:8000' }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 
@@ -294,6 +355,73 @@ const styles = {
         marginTop: '0.5rem',
         color: '#475569',
         fontWeight: '600',
+    },
+    rewardsGrid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '2rem',
+    },
+    rewardCard: {
+        padding: 0,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    rewardHeader: {
+        padding: '2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '1rem',
+        borderBottom: '1px solid rgba(0,0,0,0.05)',
+    },
+    rewardBadge: {
+        padding: '0.25rem 0.75rem',
+        borderRadius: '2rem',
+        background: 'white',
+        border: '1px solid',
+        fontWeight: 'bold',
+        fontSize: '0.9rem',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+    },
+    rewardBody: {
+        padding: '1.5rem',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    rewardTitle: {
+        fontSize: '1.25rem',
+        fontWeight: '800',
+        marginBottom: '0.5rem',
+        color: '#1e293b',
+    },
+    rewardDesc: {
+        fontSize: '0.9rem',
+        color: '#64748b',
+        marginBottom: '1.5rem',
+        flex: 1,
+    },
+    progressContainer: {
+        marginBottom: '0.5rem',
+    },
+    progressBar: {
+        height: '8px',
+        background: '#e2e8f0',
+        borderRadius: '4px',
+        overflow: 'hidden',
+        marginBottom: '0.5rem',
+    },
+    progressFill: {
+        height: '100%',
+        transition: 'width 0.5s ease-out',
+    },
+    progressText: {
+        fontSize: '0.8rem',
+        color: '#64748b',
+        fontWeight: '600',
+        textAlign: 'right',
     }
 };
 
