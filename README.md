@@ -1,299 +1,135 @@
-# 🌊 Coastal Pollution Monitor
 
-> **AI-Powered Coastal Protection Platform**  
-> *Protecting our oceans through intelligent detection, real-time mapping, and community action.*
+# 🌊 Coastal Guardian
 
-![Python](https://img.shields.io/badge/python-3.10+-green.svg)
-![React](https://img.shields.io/badge/react-18-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-teal.svg)
-![CLIP](https://img.shields.io/badge/AI-CLIP%20Vision-purple.svg)
-![SQLite](https://img.shields.io/badge/database-SQLite-orange.svg)
+**Coastal Guardian** is a modern web platform designed to empower communities in the fight against marine pollution. By combining AI vision with gamification, we turn every citizen into an active protector of our coastlines.
 
----
+## 🚀 Key Features
 
-## 🌟 Overview
+### 🧠 AI-Powered Detection
+Uses **OpenAI's CLIP Model** to intelligently analyze uploaded images. It doesn't just guess; it understands the context to identify:
+- **Plastic Waste** (Bottles, bags)
+- **Oil Spills** (Surface contamination)
+- **Marine Debris** (Nets, ghost gear)
+- **Solid Waste** (General trash)
 
-The **Coastal Pollution Monitor** is a full-stack web application that empowers citizens and organizations to fight marine pollution. Using **OpenAI's CLIP model** for zero-shot image classification, it transforms photos into actionable data points on a live map, enabling rapid response from environmental NGOs.
+### 📸 Smart Reporting
+- **Dual-Mode Upload**: Snap a photo directly via camera or drag-and-drop from your gallery.
+- **Auto-Geolocation**: Automatically extracts GPS data from images to pinpoint pollution hotspots on the global map.
+- **Real-Time Analysis**: Get instant feedback on the type of pollution and confidence level.
 
-### 🚀 Key Features
+### 🎮 Gamification & Rewards
+- **Earn Points**: Get rewarded for every verified report.
+- **Rank Up**: Progress from "New Recruit" to "Gold Guardian".
+- **Eco-Store**: Redeem points for real-world sustainable gear like metal straws, solar power banks, and ocean-friendly apparel.
 
-| Feature | Description |
-|---------|-------------|
-| 🧠 **AI Classification** | CLIP-based detection of 5 categories: Plastic, Oil Spill, Solid Waste, Marine Debris, No Waste |
-| 📍 **GPS Auto-Extract** | Automatically extracts location from image EXIF data or browser geolocation |
-| 🗺️ **Live Map** | Real-time visualization of pollution hotspots with filtering |
-| 👤 **User System** | Complete authentication with signup, login, and role-based access |
-| 🛡️ **Admin Dashboard** | Manage reports, forward to NGOs, mark as resolved |
-| 🤝 **NGO Integration** | Partner directory with report forwarding capability |
-| ✅ **False Detection Filter** | "No Waste" category prevents false positives |
+### 🌍 Social Impact
+- **Share Your Badge**: Generate dynamic "Impact Cards" showcasing your rank and contribution.
+- **Inspire Others**: One-click sharing to Twitter, LinkedIn, and WhatsApp to spread awareness.
 
----
-
-## 🎨 Application Pages
-
-### Public Pages
-| Page | Route | Description |
-|------|-------|-------------|
-| 🏠 **Home** | `/` | Landing page with hero section, live stats, and workflow visualization |
-| 🗺️ **Map** | `/map` | Interactive Leaflet map with pollution markers and filtering |
-| 🤝 **NGOs** | `/ngos` | Partner organization directory with search |
-
-### Authentication
-| Page | Route | Description |
-|------|-------|-------------|
-| 🔐 **Login** | `/login` | User authentication with JWT tokens |
-| 📝 **Signup** | `/signup` | New user registration |
-
-### Protected Pages (Requires Login)
-| Page | Route | Description |
-|------|-------|-------------|
-| 📸 **Upload Report** | `/upload` | Submit pollution photos with AI analysis |
-| 👤 **Profile** | `/profile` | View user's submitted reports |
-
-### Admin Only
-| Page | Route | Description |
-|------|-------|-------------|
-| 🛡️ **Admin Dashboard** | `/admin` | Manage all reports, users, forward to NGOs |
-
----
-
-## 🏗️ Project Structure
-
-```
-coastal-pollution-monitor/
-│
-├── 📁 backend/
-│   ├── main.py              # FastAPI app, all API endpoints
-│   ├── ml_model.py          # CLIP AI classification logic
-│   ├── database.py          # SQLite operations & schema
-│   ├── auth.py              # JWT authentication & password hashing
-│   ├── requirements.txt     # Python dependencies
-│   ├── test_data.py         # Generate sample pollution data
-│   ├── pollution.db         # SQLite database (auto-created)
-│   └── 📁 uploads/          # Uploaded images storage
-│
-├── 📁 frontend/
-│   ├── 📁 public/
-│   │   └── index.html       # HTML template
-│   ├── 📁 src/
-│   │   ├── App.js           # React Router configuration
-│   │   ├── index.js         # React entry point
-│   │   ├── index.css        # Global styles (glassmorphism theme)
-│   │   │
-│   │   ├── 📁 components/
-│   │   │   ├── Navbar.jsx       # Navigation bar
-│   │   │   ├── OceanWaves.jsx   # Animated background
-│   │   │   └── ProtectedRoute.jsx # Auth route wrapper
-│   │   │
-│   │   ├── 📁 context/
-│   │   │   └── AuthContext.js   # Authentication state management
-│   │   │
-│   │   └── 📁 pages/
-│   │       ├── Home.jsx         # Landing page
-│   │       ├── Map.jsx          # Interactive pollution map
-│   │       ├── Upload.jsx       # Report submission
-│   │       ├── NGOs.jsx         # NGO partner directory
-│   │       ├── Login.jsx        # User login
-│   │       ├── Signup.jsx       # User registration
-│   │       ├── Profile.jsx      # User profile & reports
-│   │       └── AdminDashboard.jsx # Admin control panel
-│   │
-│   └── package.json         # Node.js dependencies
-│
-├── .env.example             # Environment variables template
-├── .gitignore               # Git ignore rules
-├── API.md                   # API documentation
-├── SETUP.md                 # Detailed setup guide
-└── README.md                # This file
-```
-
----
-
-## 🧠 AI Classification Categories
-
-The CLIP model classifies images into 5 categories:
-
-| Category | Icon | Description | Confidence Threshold |
-|----------|------|-------------|---------------------|
-| 🥤 **Plastic** | `#ef4444` (Red) | Plastic bottles, bags, wrappers | >85% |
-| 🛢️ **Oil Spill** | `#1f2937` (Dark) | Petroleum contamination, dark murky water | >85% |
-| 🗑️ **Solid Waste** | `#92400e` (Brown) | Garbage piles, trash on beach | >85% |
-| 🎣 **Marine Debris** | `#0ea5e9` (Blue) | Fishing nets, ropes, buoys | >85% |
-| ✅ **No Waste** | `#22c55e` (Green) | Clean water, no pollution detected | Default fallback |
-
-> **Note**: If confidence is below 85%, the system defaults to "No Waste" to prevent false positives.
-
----
-
-## ⚡ Quick Start
-
-### Prerequisites
-- **Python 3.10+** (for backend)
-- **Node.js 18+** (for frontend)
-
-### 1️⃣ Backend Setup
-
-```bash
-cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate (Windows)
-.\venv\Scripts\activate
-# Activate (Mac/Linux)
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start server
-python main.py
-```
-
-🟢 **Backend runs at**: `http://localhost:8000`
-
-### 2️⃣ Frontend Setup
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-🟢 **Frontend runs at**: `http://localhost:3000`
-
-### 3️⃣ Default Admin Account
-
-After starting the backend, a default admin is created:
-
-| Field | Value |
-|-------|-------|
-| Email | `admin@coastal.com` |
-| Password | `admin123` |
-
-### 4️⃣ Generate Test Data (Optional)
-
-```bash
-cd backend
-python test_data.py
-```
-
-This creates sample pollution reports with images for testing.
-
----
-
-## 🔌 API Endpoints
-
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/api/auth/signup` | Register new user | ❌ |
-| `POST` | `/api/auth/login` | Login & get JWT token | ❌ |
-| `GET` | `/api/reports` | Get all public reports | ❌ |
-| `GET` | `/api/stats` | Get pollution statistics | ❌ |
-| `GET` | `/api/ngos` | List partner NGOs | ❌ |
-| `POST` | `/api/upload` | Submit pollution report | ✅ |
-| `POST` | `/api/extract-gps` | Extract GPS from image | ❌ |
-| `GET` | `/api/user/reports` | Get user's reports | ✅ |
-| `GET` | `/api/admin/reports` | Get all reports (admin) | ✅ Admin |
-| `PUT` | `/api/admin/reports/{id}` | Update report status | ✅ Admin |
-
-> See `API.md` for detailed documentation.
+### 🗺️ Live Pollution Map
+- **Interactive Visualization**: See all reported incidents on a clustered map.
+- **Filterable Data**: Sort reports by pollution type or status (Resolved/Pending).
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| **FastAPI** | High-performance async API framework |
-| **CLIP (OpenAI)** | Zero-shot image classification |
-| **SQLite** | Lightweight database |
-| **JWT** | Token-based authentication |
-| **bcrypt** | Secure password hashing |
-| **Pillow** | Image processing & EXIF extraction |
-
 ### Frontend
-| Technology | Purpose |
-|------------|---------|
-| **React 18** | UI framework |
-| **React Router v6** | Client-side routing |
-| **Leaflet.js** | Interactive maps |
-| **Axios** | HTTP client |
-| **jwt-decode** | Token parsing |
-| **CSS3** | Glassmorphism styling |
+- [**React 18**](https://react.dev/)
+- [**Tailwind CSS**](https://tailwindcss.com/)
+- [**Lucide React**](https://lucide.dev/)
+- [**React Leaflet**](https://react-leaflet.js.org/)
+- [**HTML2Canvas**](https://html2canvas.hertzen.com/)
+
+### Backend
+- [**FastAPI**](https://fastapi.tiangolo.com/)
+- [**OpenAI CLIP**](https://github.com/openai/CLIP)
+- [**SQLite**](https://www.sqlite.org/index.html)
+- [**Pillow (PIL)**](https://python-pillow.org/)
+- [**JWT**](https://jwt.io/) & [**BCrypt**](https://pypi.org/project/bcrypt/)
 
 ---
 
-## 🔐 Environment Variables
+## 📂 Project Structure
 
-Copy `.env.example` to `.env` and configure:
-
-```env
-# Backend
-SECRET_KEY=your-secret-key-here
-ACCESS_TOKEN_EXPIRE_MINUTES=1440
-CORS_ORIGINS=http://localhost:3000
-
-# Frontend
-REACT_APP_API_URL=http://localhost:8000
+```bash
+coastal-guardian/
+│
+├── 📁 backend/
+│   ├── main.py              # FastAPI app & endpoints
+│   ├── ml_model.py          # AI classification logic (CLIP)
+│   ├── database.py          # Database models & connection
+│   ├── auth.py              # Authentication handler
+│   ├── requirements.txt     # Python dependencies
+│   └── 📁 uploads/          # Image storage
+│
+├── 📁 frontend/
+│   ├── 📁 public/
+│   ├── 📁 src/
+│   │   ├── 📁 components/   # Reusable UI components
+│   │   ├── 📁 context/      # Auth & global state
+│   │   ├── 📁 pages/        # Application routes
+│   │   │   ├── Home.jsx
+│   │   │   ├── Map.jsx
+│   │   │   ├── Upload.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   └── ...
+│   │   ├── App.js           # Main component
+│   │   └── index.css        # Global styles
+│   └── package.json         # Node dependencies
+│
+├── .env.example             # Environment template
+└── README.md                # Project documentation
 ```
 
 ---
 
-## 📱 Screenshots
+## ⚡ Getting Started
 
-### Home Page
-- Hero section with animated ocean waves
-- Live statistics dashboard
-- Step-by-step workflow guide
+### 1. Backend Setup
+```bash
+cd backend
+python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
 
-### Upload & AI Analysis
-- Camera/Gallery upload options
-- Automatic GPS extraction
-- Real-time AI classification results
+pip install -r requirements.txt
+python main.py
+```
+*Server starts at `http://localhost:8000`*
 
-### Interactive Map
-- Color-coded pollution markers
-- Filter by pollution type
-- Rich popups with report details
+### 2. Frontend Setup
+```bash
+cd frontend
+npm install
+npm start
+```
+*App opens at `http://localhost:3000`*
 
-### Admin Dashboard
-- Report management table
-- Status updates (Pending → Forwarded → Resolved)
-- User management
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### 3. Admin Access
+Default admin credentials for dashboard access:
+- **Email**: `admin@coastal.com`
+- **Password**: `admin123`
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-## 🙏 Acknowledgments
-
-- **OpenAI CLIP** - Zero-shot image classification
-- **Leaflet.js** - Beautiful interactive maps
-- **FastAPI** - Modern Python web framework
-- **React** - Frontend UI library
+## 🔒 Privacy & Security
+- **Local-First Processing**: Images are processed securely.
+- **Data Minimization**: Only essential location data is stored for mapping purposes.
+- **Role-Based Access**: Strict separation between user and admin capabilities.
 
 ---
 
-**Made with 💙 for Cleaner Oceans**  
-*Empowering communities to protect our coastlines*
+## 🏆 Credits & Acknowledgments
+
+- **OpenAI CLIP**: [https://github.com/openai/CLIP](https://github.com/openai/CLIP)
+- **Processed Coastal Pollutant Dataset**: [https://www.kaggle.com/datasets/adidev001/procesed-again-costal-polutant](https://www.kaggle.com/datasets/adidev001/procesed-again-costal-polutant)
+  > *Dataset Credit: This project uses the public Kaggle dataset Garbage Classification V2 by sumn2u. I adapted the dataset structure/labels for my use case and trained a MobileNetV2-based model on it. The model file is compressed for easier distribution.*
+- **Beach Litter Research**: [https://www.seanoe.org/data/00858/96963/](https://www.seanoe.org/data/00858/96963/)
+  > *Research utilized for understanding beach litter composition and structuring our target dataset.*
+
+---
+
+**Built for a Cleaner Future.** 🐋
